@@ -1,0 +1,54 @@
+{
+  "name": "wodule",
+  "version": "0.0.2",
+  "description": "A Module class for unified usage of modules.",
+  "main": "index.js",
+  "keywords": [
+    "module"
+  ],
+  "scripts": {
+    "test": "node test"
+  },
+  "engines": {
+    "node": ">=0.11.0"
+  },
+  "author": "ADoyle <adoyle.h@gmail.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/adoyle-h/wodule",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adoyle-h/wodule.git"
+  },
+  "bugs": {
+    "url": "https://github.com/adoyle-h/wodule/issues"
+  },
+  "dependencies": {
+    "bluebird": "^3.1.1"
+  },
+  "devDependencies": {
+    "config-sp": "^0.1.1",
+    "cz-conventional-changelog": "^1.1.5",
+    "del": "^2.2.0",
+    "eslint": "^1.10.3",
+    "eslint-config-airbnb": "^2.1.1",
+    "gulp": "^3.9.0",
+    "gulp-bump": "^1.0.0",
+    "gulp-cached": "^1.1.0",
+    "gulp-conventional-changelog": "^0.7.0",
+    "gulp-eslint": "^1.1.1",
+    "gulp-filter": "^3.0.1",
+    "gulp-license": "^1.0.0",
+    "minimist": "^1.2.0",
+    "mocha": "^2.3.4",
+    "run-sequence": "^1.1.5",
+    "should": "^7.1.1",
+    "should-sinon": "0.0.3",
+    "sinon": "^1.17.2",
+    "walkdir": "0.0.11"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
