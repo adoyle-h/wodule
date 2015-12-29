@@ -5,12 +5,6 @@ var Promise = require('./promise');
 
 /**
  * @private
- * @method emtpyCallback
- * @return {undefined}
- */
-var emtpyCallback = function() {};
-/**
- * @private
  * @method idle
  * @return {true}
  */
@@ -87,17 +81,17 @@ Module.prototype._init = idle;
  * initialize the module
  *
  * @method init
- * @param  {Function} [callback]
+ * @param  {Function} [callback=undefined]
  * @param  {Error} [callback.err]
- * @return {Promise.<true|Error>}  Fulfilled with true if no exception occurs, otherwise rejected with an error.
+ * @return {undefined|Promise.<true|Error>}
+ * If callback is provided, return undefined, and error will be delivered by callback.
+ * Otherwise, return a promise, which fulfilled with true if no exception occurs or rejected with an error.
  */
 Module.prototype.init = function init(callback) {
     var module = this;
     if (module.initialized === true) return Promise.resolve(true);
 
-    callback = callback || emtpyCallback;
-
-    return Promise.resolve()
+    var promise = Promise.resolve()
         .then(function() {
             return util.returnOrCallback(function(callback) {
                 return module._init(callback);
@@ -106,15 +100,21 @@ Module.prototype.init = function init(callback) {
         .then(function(initialized) {
             if (initialized === true) {
                 module.initialized = initialized;
-                callback();
+                if (util.isFunction(callback)) callback();
                 return initialized;
             } else if (initialized === false) {
                 return Promise.reject(new Error('module._init failed'));
             } else {
                 return Promise.reject(new Error('The value returned from module._init is not a boolean!'));
             }
-        })
-        .catchThrow(callback);
+        });
+
+    if (util.isFunction(callback)) {
+        promise.catch(callback);
+        return undefined;
+    } else {
+        return promise;
+    }
 };
 
 /**
@@ -141,15 +141,16 @@ Module.prototype._start = idle;
  * @throws {Error} Throw error if `module.init()` return false.
  *
  * @method start
- * @param  {Function} [callback]
+ * @param  {Function} [callback=undefined]
  * @param  {Error} [callback.err]
- * @return {Promise.<true|Error>}  Fulfilled with true if no exception occurs, otherwise rejected with an error.
+ * @return {undefined|Promise.<true|Error>}
+ * If callback is provided, return undefined, and error will be delivered by callback.
+ * Otherwise, return a promise, which fulfilled with true if no exception occurs or rejected with an error.
  */
 Module.prototype.start = function start(callback) {
-    callback = callback || emtpyCallback;
     var module = this;
 
-    return Promise.resolve()
+    var promise = Promise.resolve()
         .then(function() {
             if (module.initialized === false) return Promise.reject(new Error('module has not been initialized!'));
 
@@ -160,15 +161,21 @@ Module.prototype.start = function start(callback) {
         .then(function(started) {
             if (started === true) {
                 module.running = true;
-                callback();
+                if (util.isFunction(callback)) callback();
                 return started;
             } else if (started === false) {
                 return Promise.reject(new Error('module._start failed'));
             } else {
                 return Promise.reject(new Error('The value returned from module._start is not a boolean!'));
             }
-        })
-        .catchThrow(callback);
+        });
+
+    if (util.isFunction(callback)) {
+        promise.catch(callback);
+        return undefined;
+    } else {
+        return promise;
+    }
 };
 
 /**
@@ -187,15 +194,16 @@ Module.prototype._stop = idle;
  * stop running module
  *
  * @method stop
- * @param  {Function} [callback]
+ * @param  {Function} [callback=undefined]
  * @param  {Error} [callback.err]
- * @return {Promise.<true|Error>}  Fulfilled with true if no exception occurs, otherwise rejected with an error.
+ * @return {undefined|Promise.<true|Error>}
+ * If callback is provided, return undefined, and error will be delivered by callback.
+ * Otherwise, return a promise, which fulfilled with true if no exception occurs or rejected with an error.
  */
 Module.prototype.stop = function stop(callback) {
-    callback = callback || emtpyCallback;
     var module = this;
 
-    return Promise.resolve()
+    var promise = Promise.resolve()
         .then(function() {
             if (module.initialized === false) return Promise.reject(new Error('module has not been initialized!'));
             if (module.running === false) return Promise.reject(new Error('module is not running!'));
@@ -207,15 +215,21 @@ Module.prototype.stop = function stop(callback) {
         .then(function(stopped) {
             if (stopped === true) {
                 module.running = false;
-                callback();
+                if (util.isFunction(callback)) callback();
                 return stopped;
             } else if (stopped === false) {
                 return Promise.reject(new Error('module._stop failed'));
             } else {
                 return Promise.reject(new Error('The value returned from module._stop is not a boolean!'));
             }
-        })
-        .catchThrow(callback);
+        });
+
+    if (util.isFunction(callback)) {
+        promise.catch(callback);
+        return undefined;
+    } else {
+        return promise;
+    }
 };
 
 /**

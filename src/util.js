@@ -4,6 +4,12 @@ var Promise = require('./promise');
 
 var util = exports;
 
+exports.emtpyCallback = function() {};
+
+exports.isFunction = function(value) {
+    return typeof value === 'function';
+};
+
 exports.once = function(func) {
     var called = false;
     var result;
