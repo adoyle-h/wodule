@@ -14,9 +14,8 @@ var Wodule = require('wodule');
 var mod = new Wodule({
     init: function() {
         console.log('Module initialized');
-        return true;   // 别忘了返回一个 Boolean 变量，它用来指示是否成功初始化。
-        // return Promise.resolve(true);  // 或者返回一个 Promise
-        // throw new Error();  // 或者直接抛错
+        // return false;   // 返回 false 意味着初始化失败
+        // throw new Error();  // 或者抛错
     },
     start: function() {
         console.log('Module started');
@@ -35,33 +34,25 @@ var mod = new Wodule({
 });
 
 // 举个例子
-// 每一个阶段，要么顺利运行，要么以 Promise 的形式抛错
-mod.init()
+// 如果初始化失败，它将抛错
+mod.init();
+
+// 如果启动失败，它将返回一个 rejected 状态的 Promise
+mod.start();
     .then(function() {
         console.log('do something');
     })
     .then(function() {
-        return mod.start();
-    })
-    .then(function() {
-        console.log('do something');
-    })
-    .then(function() {
-        return mod.stop();
-    })
-    .then(function() {
-        console.log('do something');
+        mod.exit();  // 这将会直接退出进程，无论在 stop 和 exit 阶段是否发生错误。
     })
     .catch(function(err) {
         console.error(err);
-    })
-    .then(function() {
-        mod.exit();  // 这将会直接退出进程
+        mod.exit(1);
     });
 
-// 它也支持 callback 的写法
+// 它也支持 callback 的写法。但是你只能在 callback 和 promise 选择其一使用。
 //
-// mod.init(function(err) {
+// mod.start(function(err) {
 //     if (err) console.error(err)
 // });
 ```
