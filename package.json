@@ -28,6 +28,7 @@
   "devDependencies": {
     "config-sp": "^0.1.1",
     "cz-conventional-changelog": "^1.1.5",
+    "del": "^2.2.0",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^2.1.1",
     "gulp": "^3.9.0",
@@ -39,6 +40,7 @@
     "gulp-license": "^1.0.0",
     "minimist": "^1.2.0",
     "mocha": "^2.3.4",
+    "run-sequence": "^1.1.5",
     "should": "^7.1.1",
     "should-sinon": "0.0.3",
     "sinon": "^1.17.2",
