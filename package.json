@@ -1,6 +1,6 @@
 {
   "name": "wodule",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A Module class for unified usage of modules.",
   "main": "index.js",
   "keywords": [
