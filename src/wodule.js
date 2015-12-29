@@ -66,14 +66,16 @@ Module.prototype.setExitMethod = function(method) {
 
 /**
  * Implement your business codes to initialize this module.
+ * Do not do anything asynchronous.
  *
  * @template
  * @protected
- * @throws  Throw an error if any exception occurs.
+ * @throws {Error}  Throw an error if any exception occurs.
  * @method _init
- * @param  {Function} [callback]
- * @param  {Error} [callback.err]
- * @return {Boolean|Promise.<Boolean|Error>}  Whether the module is initialized successfully or not
+ * @return {undefined|Boolean}
+ * Whether the module is initialized successfully or not.
+ * It will be initialized successfully if return `undefined`.
+ * It will throw an error if return `false`.
  */
 Module.prototype._init = idle;
 
@@ -81,40 +83,26 @@ Module.prototype._init = idle;
  * initialize the module
  *
  * @method init
- * @param  {Function} [callback=undefined]
- * @param  {Error} [callback.err]
- * @return {undefined|Promise.<true|Error>}
- * If callback is provided, return undefined, and error will be delivered by callback.
- * Otherwise, return a promise, which fulfilled with true if no exception occurs or rejected with an error.
+ * @throws {Error}
+ * @return {true}
  */
-Module.prototype.init = function init(callback) {
+Module.prototype.init = function init() {
     var module = this;
-    if (module.initialized === true) return Promise.resolve(true);
+    if (module.initialized === true) return true;
 
-    var promise = Promise.resolve()
-        .then(function() {
-            return util.returnOrCallback(function(callback) {
-                return module._init(callback);
-            });
-        })
-        .then(function(initialized) {
-            if (initialized === true) {
-                module.initialized = initialized;
-                if (util.isFunction(callback)) callback();
-                return initialized;
-            } else if (initialized === false) {
-                return Promise.reject(new Error('module._init failed'));
-            } else {
-                return Promise.reject(new Error('The value returned from module._init is not a boolean!'));
-            }
-        });
+    var initialized = module._init();
 
-    if (util.isFunction(callback)) {
-        promise.catch(callback);
-        return undefined;
+    if (initialized === undefined) {
+        module.initialized = true;
+    } else if (initialized === true) {
+        module.initialized = true;
+    } else if (initialized === false) {
+        throw new Error('module._init failed');
     } else {
-        return promise;
+        throw new Error('The value returned from module._init must be a Boolean or undefined!');
     }
+
+    return module.initialized;
 };
 
 /**
@@ -152,8 +140,7 @@ Module.prototype.start = function start(callback) {
 
     var promise = Promise.resolve()
         .then(function() {
-            if (module.initialized === false) return Promise.reject(new Error('module has not been initialized!'));
-
+            module.init();
             return util.returnOrCallback(function(callback) {
                 return module._start(callback);
             });

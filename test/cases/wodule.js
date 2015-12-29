@@ -35,10 +35,9 @@ describe('#wodule', function() {
         });
 
         it('module.init()', function() {
-            return wodule.init().tap(function() {
-                wodule.initialized.should.be.true();
-                Wodule.prototype._init.should.be.calledOnce();
-            });
+            wodule.init();
+            wodule.initialized.should.be.true();
+            Wodule.prototype._init.should.be.calledOnce();
         });
 
         it('module.start()', function() {
