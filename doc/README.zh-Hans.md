@@ -1,16 +1,12 @@
 # Wodule
 
-A Module class for unified usage of modules.
+一个用于统一操作的模块类。
 
-## Document Translations
-
-[简体中文](./doc/README.zh-Hans.md)
-
-## Installation
+## 安装（Installation）
 
 `npm install --save wodule`
 
-## Quick Start
+## 快速上手（Quick Start）
 
 ```js
 var Wodule = require('wodule');
@@ -18,9 +14,9 @@ var Wodule = require('wodule');
 var mod = new Wodule({
     init: function() {
         console.log('Module initialized');
-        return true;   // Do not forget to return a boolean value, which indicating the success of initialize.
-        // return Promise.resolve(true);  // or return a promise.
-        // throw new Error();  // or throw an error
+        return true;   // 别忘了返回一个 Boolean 变量，它用来指示是否成功初始化。
+        // return Promise.resolve(true);  // 或者返回一个 Promise
+        // throw new Error();  // 或者直接抛错
     },
     start: function() {
         console.log('Module started');
@@ -32,14 +28,14 @@ var mod = new Wodule({
     },
     exit: function(err) {
         if (err) {
-            console.error(err.stack);  // the error is thrown by `stop` function
+            console.error(err.stack);  // 这个错误从 `stop` 函数中抛出
         }
         console.log('Module exited');
     },
 });
 
-// Just an example
-// Each phase will either execute successful or throw (Promise.reject) an error
+// 举个例子
+// 每一个阶段，要么顺利运行，要么以 Promise 的形式抛错
 mod.init()
     .then(function() {
         console.log('do something');
@@ -60,15 +56,16 @@ mod.init()
         console.error(err);
     })
     .then(function() {
-        mod.exit();  // will exit process
+        mod.exit();  // 这将会直接退出进程
     });
 
-// It also support callback
+// 它也支持 callback 的写法
 //
 // mod.init(function(err) {
 //     if (err) console.error(err)
 // });
 ```
+
 
 ## API
 
