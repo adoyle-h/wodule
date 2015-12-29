@@ -18,8 +18,7 @@ var Wodule = require('wodule');
 var mod = new Wodule({
     init: function() {
         console.log('Module initialized');
-        return true;   // Do not forget to return a boolean value, which indicating the success of initialize.
-        // return Promise.resolve(true);  // or return a promise.
+        // return false;   // Returning false means initialize failed.
         // throw new Error();  // or throw an error
     },
     start: function() {
@@ -39,33 +38,25 @@ var mod = new Wodule({
 });
 
 // Just an example
-// Each phase will either execute successful or throw (Promise.reject) an error
-mod.init()
+// If failed to init, it would throw an error.
+mod.init();
+
+// If failed to start, it would return a promise which is rejected with an error.
+mod.start();
     .then(function() {
         console.log('do something');
     })
     .then(function() {
-        return mod.start();
-    })
-    .then(function() {
-        console.log('do something');
-    })
-    .then(function() {
-        return mod.stop();
-    })
-    .then(function() {
-        console.log('do something');
+        mod.exit();  // Will exit process regardless of whether an error occurred during stop and exit.
     })
     .catch(function(err) {
         console.error(err);
-    })
-    .then(function() {
-        mod.exit();  // will exit process
+        mod.exit(1);
     });
 
-// It also support callback
+// It also support callback. But you can only use either callback or promise.
 //
-// mod.init(function(err) {
+// mod.start(function(err) {
 //     if (err) console.error(err)
 // });
 ```
