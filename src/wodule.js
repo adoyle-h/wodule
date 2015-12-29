@@ -9,13 +9,41 @@ var idle = function() {return true;};
 /**
  * @class Module
  */
-function Module() {
+function Module(options) {
     var module = this;
+    options = options || {};
 
     module.initialized = false;
     module.running = false;
-    module.instance = null;
+
+    ['init', 'start', 'stop', 'exit'].forEach(function(name) {
+        var method = options[name];
+        if (method) {
+            var setMethod = 'set' + name[0].toUpperCase() + name.slice(1) + 'Method';
+            module[setMethod](method);
+        }
+    });
 }
+
+Module.prototype.setInitMethod = function(method) {
+    if (typeof method !== 'function') throw new Error('The method must be a Function!');
+    this._init = method;
+};
+
+Module.prototype.setStartMethod = function(method) {
+    if (typeof method !== 'function') throw new Error('The method must be a Function!');
+    this._start = method;
+};
+
+Module.prototype.setStopMethod = function(method) {
+    if (typeof method !== 'function') throw new Error('The method must be a Function!');
+    this._stop = method;
+};
+
+Module.prototype.setExitMethod = function(method) {
+    if (typeof method !== 'function') throw new Error('The method must be a Function!');
+    this._exit = method;
+};
 
 /**
  * Implement your business codes to initialize this module.
