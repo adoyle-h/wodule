@@ -3,17 +3,42 @@
 var util = require('./util');
 var Promise = require('./promise');
 
+/**
+ * @private
+ * @method emtpyCallback
+ * @return {undefined}
+ */
 var emtpyCallback = function() {};
+/**
+ * @private
+ * @method idle
+ * @return {true}
+ */
 var idle = function() {return true;};
 
 /**
  * @class Module
+ *
+ * @constructor
+ * @param {Object} [options]
+ * @param {Function} [options.init=idle]
+ * @param {Function} [options.start=idle]
+ * @param {Function} [options.stop=idle]
+ * @param {Function} [options.exit=idle]
  */
 function Module(options) {
     var module = this;
     options = options || {};
 
+    /**
+     * Whether the module is initialized.
+     * @property {Boolean} [initialized=false]
+     */
     module.initialized = false;
+    /**
+     * Whether the module is running.
+     * @property {Boolean} [running=false]
+     */
     module.running = false;
 
     ['init', 'start', 'stop', 'exit'].forEach(function(name) {
