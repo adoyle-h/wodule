@@ -144,7 +144,7 @@ describe('#wodule', function() {
             });
         });
 
-        describe('start', function () {
+        describe('start', function() {
             after(function() {
                 delete wodule._start;
             });
