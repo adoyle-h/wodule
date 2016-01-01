@@ -6,9 +6,18 @@ var Promise = require('./promise');
 /**
  * @private
  * @method idle
- * @return {true}
+ * @return {undefined}
  */
-var idle = function() {return true;};
+var idle = util.emtpyCallback;
+
+/**
+ * @private
+ * @method promiseTrue
+ * @return {Promise.<true>}
+ */
+function promiseTrue() {
+    return Promise.resolve(true);
+}
 
 /**
  * @class Module
@@ -16,8 +25,8 @@ var idle = function() {return true;};
  * @constructor
  * @param {Object} [options]
  * @param {Function} [options.init=idle]
- * @param {Function} [options.start=idle]
- * @param {Function} [options.stop=idle]
+ * @param {Function} [options.start=promiseTrue]
+ * @param {Function} [options.stop=promiseTrue]
  * @param {Function} [options.exit=idle]
  */
 function Module(options) {
@@ -72,19 +81,19 @@ Module.prototype.setExitMethod = function(method) {
  * @protected
  * @throws {Error}  Throw an error if any exception occurs.
  * @method _init
- * @return {undefined|Boolean}
- * Whether the module is initialized successfully or not.
- * It will be initialized successfully if return `undefined`.
- * It will throw an error if return `false`.
+ * @return {*|false}
+ * Return anything expect `false` to represent the module has been initialized successfully, and `module.initialized` will be `true`.
+ * Returning `false` means that the process of initializing module failed.
  */
 Module.prototype._init = idle;
 
 /**
- * initialize the module
+ * Initialize the module.
+ * It is only initialized once even if multiple invocations.
  *
  * @method init
- * @throws {Error}
- * @return {true}
+ * @throws {Error}  Throw an exception when failed to initialize.
+ * @return {true}  The module has been initialized successfully.
  */
 Module.prototype.init = function init() {
     var module = this;
@@ -92,14 +101,10 @@ Module.prototype.init = function init() {
 
     var initialized = module._init();
 
-    if (initialized === undefined) {
-        module.initialized = true;
-    } else if (initialized === true) {
-        module.initialized = true;
-    } else if (initialized === false) {
+    if (initialized === false) {
         throw new Error('module._init failed');
     } else {
-        throw new Error('The value returned from module._init must be a Boolean or undefined!');
+        module.initialized = true;
     }
 
     return module.initialized;
@@ -108,32 +113,31 @@ Module.prototype.init = function init() {
 /**
  * Implement your business codes to start this module.
  *
+ * You must invoke the `done` function or return promise to indicate the process of starting module has been done.
+ *
  * @template
  * @protected
  * @throws  Throw an error if any exception occurs.
  * @method _start
- * @param  {Function} callback
- * @param  {Error} [callback.err]
- * @return {Boolean|Promise.<Boolean>}  Whether the module is started successfully or not
+ * @param  {Function} done  A optional callback for indicating the process has been done.
+ * @param  {Error} [done.err]  If pass an error, it means that the process of starting module failed.
+ * @return {Promise.<*|Error>}
+ * Return a promise fulfilled with anything to represent the module has been started successfully, and `module.running` will be `true`.
+ * Returning a promise rejected with a error means that the process of starting module failed.
  */
-Module.prototype._start = idle;
+Module.prototype._start = promiseTrue;
 
 /**
  * initialize and start
  *
  * This method return a promise indicating whether started successfully or not.
- * If any error occurs in this period, the callback(err) will be invoked first,
- * and then the promise will be fulfilled with `false`.
- * So the promise never be rejected with an error.
- *
- * @throws {Error} Throw error if `module.init()` return false.
+ * When any error occurs in this period, the callback(err) will be invoked first (if callback is provided),
+ * and then the promise will be rejected with an error.
  *
  * @method start
- * @param  {Function} [callback=undefined]
- * @param  {Error} [callback.err]
- * @return {undefined|Promise.<true|Error>}
- * If callback is provided, return undefined, and error will be delivered by callback.
- * Otherwise, return a promise, which fulfilled with true if no exception occurs or rejected with an error.
+ * @param  {Function} [callback=undefined]  The callback will be invoked when start function is done.
+ * @param  {Error} [callback.err]  The error exists when failed to start module.
+ * @return {Promise.<true|Error>}
  */
 Module.prototype.start = function start(callback) {
     var module = this;
@@ -145,47 +149,43 @@ Module.prototype.start = function start(callback) {
                 return module._start(callback);
             });
         })
-        .then(function(started) {
-            if (started === true) {
-                module.running = true;
-                if (util.isFunction(callback)) callback();
-                return started;
-            } else if (started === false) {
-                return Promise.reject(new Error('module._start failed'));
-            } else {
-                return Promise.reject(new Error('The value returned from module._start is not a boolean!'));
-            }
-        });
+        .then(function() {
+            module.running = true;
+        })
+        .asCallback(callback)
+        .return(true);
 
-    if (util.isFunction(callback)) {
-        promise.catch(callback);
-        return undefined;
-    } else {
-        return promise;
-    }
+    return promise;
 };
 
 /**
  * Implement your business codes to stop this module.
  *
+ * You must invoke the `done` function or return promise to indicate the process of stopping module has been done.
+ *
  * @template
  * @protected
+ * @throws  Throw an error if any exception occurs.
  * @method _stop
- * @param {Function} callback
- * @param {*} callback.return
- * @return {Boolean|Promise.<Boolean>}
+ * @param  {Function} done  A optional callback for indicating the process has been done.
+ * @param  {Error} [done.err]  If pass an error, it means that the process of stopping module failed.
+ * @return {Promise.<*|Error>}
+ * Return a promise fulfilled with anything to represent the module is stopped successfully, and `module.running` will be false.
+ * Returning a promise rejected with a error means that the process of stopping module failed.
  */
-Module.prototype._stop = idle;
+Module.prototype._stop = promiseTrue;
 
 /**
  * stop running module
  *
+ * This method return a promise indicating whether stopped successfully or not.
+ * When any error occurs in this period, the callback(err) will be invoked first (if callback is provided),
+ * and then the promise will be rejected with an error.
+ *
  * @method stop
- * @param  {Function} [callback=undefined]
- * @param  {Error} [callback.err]
- * @return {undefined|Promise.<true|Error>}
- * If callback is provided, return undefined, and error will be delivered by callback.
- * Otherwise, return a promise, which fulfilled with true if no exception occurs or rejected with an error.
+ * @param  {Function} [callback=undefined]  The callback will be invoked when stop function is done.
+ * @param  {Error} [callback.err]  The error exists when failed to stop module.
+ * @return {Promise.<true|Error>}
  */
 Module.prototype.stop = function stop(callback) {
     var module = this;
@@ -199,43 +199,31 @@ Module.prototype.stop = function stop(callback) {
                 return module._stop(callback);
             });
         })
-        .then(function(stopped) {
-            if (stopped === true) {
-                module.running = false;
-                if (util.isFunction(callback)) callback();
-                return stopped;
-            } else if (stopped === false) {
-                return Promise.reject(new Error('module._stop failed'));
-            } else {
-                return Promise.reject(new Error('The value returned from module._stop is not a boolean!'));
-            }
-        });
+        .then(function() {
+            module.running = false;
+        })
+        .asCallback(callback)
+        .return(true);
 
-    if (util.isFunction(callback)) {
-        promise.catch(callback);
-        return undefined;
-    } else {
-        return promise;
-    }
+    return promise;
 };
 
 /**
  * Implement your business codes to prepare for exiting process.
  *
  * Do not do anything asynchronous.
- * Do not throw any error.
+ * It is better to catch any exception in the function by yourself.
  *
  * @template
  * @protected
+ * @throws {*}
  * @method _exit
- * @param  {Function} callback  A synchronously called callback.
- * @param  {Error} [callback.err]  Callback an error when module.stop throws error.
- * @return {Boolean}
+ * @return {*}  The returned value does not work.
  */
 Module.prototype._exit = idle;
 
 /**
- * Stop the module, invoke `module._exit` and exit process.
+ * Stop the module first, and then invoke `module._exit`. Exit process finally.
  * It will only be executed once even if with multiple invocations.
  *
  * @method exit
@@ -252,7 +240,7 @@ Module.prototype.exit = util.once(function exit(exitCode) {
         })
         .catch(function(err) {
             /* eslint-disable no-console */
-            console.error('You should catch any error thrown from module._exit by yourself.', err.stack || err);
+            console.error('You should catch any exception thrown from module._exit by yourself.', err.stack || err);
         })
         .finally(function() {
             process.exit(exitCode || 0);
