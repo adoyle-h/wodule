@@ -21,13 +21,21 @@ var mod = new Wodule({
         // return false;   // Returning false means initialize failed.
         // throw new Error();  // or throw an error
     },
-    start: function() {
+    start: function(callback) {  // callback is optional
         console.log('Module started');
-        return true;
+        callback();
+        // callback(new Error());  // or callback an error
+        // return Promise.resolve();  // or return a fulfilled promise
+        // return Promise.reject();  // or return a rejected promise
+        // throw new Error();  // or throw an error
     },
-    stop: function() {
+    stop: function(callback) {  // callback is optional
         console.log('Module stopped');
-        return true;
+        callback();
+        // callback(new Error());  // or callback an error
+        // return Promise.resolve();  // or return a fulfilled promise
+        // return Promise.reject();  // or return a rejected promise
+        // throw new Error();  // or throw an error
     },
     exit: function(err) {
         if (err) {
