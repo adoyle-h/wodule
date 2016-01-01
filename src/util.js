@@ -27,14 +27,13 @@ exports.isPromise = function(value) {
 };
 
 exports.returnOrCallback = function(func) {
-    var oneHour = 3600000;
     var returnedPromise;
     var callbackPromise = new Promise(function(resolve, reject) {
         returnedPromise = func(function(err) {
             if (err) return reject(err);
             resolve(true);
         });
-    }).timeout(oneHour, 'callback has not been invoked in one hour!');
+    });
 
     var promise;
     if (util.isPromise(returnedPromise)) {
