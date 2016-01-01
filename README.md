@@ -21,13 +21,21 @@ var mod = new Wodule({
         // return false;   // Returning false means initialize failed.
         // throw new Error();  // or throw an error
     },
-    start: function() {
+    start: function(callback) {  // callback is optional
         console.log('Module started');
-        return true;
+        callback();
+        // callback(new Error());  // or callback an error
+        // return Promise.resolve();  // or return a fulfilled promise
+        // return Promise.reject();  // or return a rejected promise
+        // throw new Error();  // or throw an error
     },
-    stop: function() {
+    stop: function(callback) {  // callback is optional
         console.log('Module stopped');
-        return true;
+        callback();
+        // callback(new Error());  // or callback an error
+        // return Promise.resolve();  // or return a fulfilled promise
+        // return Promise.reject();  // or return a rejected promise
+        // throw new Error();  // or throw an error
     },
     exit: function(err) {
         if (err) {
@@ -63,9 +71,18 @@ mod.start();
 
 ## API
 
+
+## Versioning
+
+The versioning follows the rules of SemVer 2.0.0.
+
+**BUT**, anything may have **BREAKING CHANGES** at **ANY TIME** when major version is zero (0.y.z), which is for initial development and the public API should not be considered stable.
+
+For more information on SemVer, please visit http://semver.org/.
+
 ## Copyright and License
 
-Copyright 2015 ADoyle
+Copyright 2015-2016 ADoyle
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at

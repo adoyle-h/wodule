@@ -27,26 +27,20 @@ exports.isPromise = function(value) {
 };
 
 exports.returnOrCallback = function(func) {
-    var oneHour = 3600000;
     var returnedPromise;
     var callbackPromise = new Promise(function(resolve, reject) {
         returnedPromise = func(function(err) {
             if (err) return reject(err);
             resolve(true);
         });
-    }).timeout(oneHour, 'callback has not been invoked in one hour!');
+    });
 
-    var result;
-    if (returnedPromise === undefined) {
-        result = callbackPromise;
-    } else {
+    var promise;
+    if (util.isPromise(returnedPromise)) {
+        promise = returnedPromise;
         callbackPromise.cancel();
-
-        if (util.isPromise(returnedPromise)) {
-            result = returnedPromise;
-        } else {
-            result = Promise.resolve(returnedPromise);
-        }
+    } else {
+        promise = callbackPromise;
     }
-    return result;
+    return promise;
 };

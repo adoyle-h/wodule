@@ -17,13 +17,21 @@ var mod = new Wodule({
         // return false;   // 返回 false 意味着初始化失败
         // throw new Error();  // 或者抛错
     },
-    start: function() {
+    start: function(callback) {
         console.log('Module started');
-        return true;
+        callback();
+        // callback(new Error());  // 或者 callback 一个错误
+        // return Promise.resolve();  // 或者返回一个 Promise (成功)对象
+        // return Promise.reject();  // 或者返回一个 Promise (拒绝)对象
+        // throw new Error();  // 或者抛出一个错误
     },
-    stop: function() {
+    stop: function(callback) {
         console.log('Module stopped');
-        return true;
+        callback();
+        // callback(new Error());  // 或者 callback 一个错误
+        // return Promise.resolve();  // 或者返回一个 Promise (成功)对象
+        // return Promise.reject();  // 或者返回一个 Promise (拒绝)对象
+        // throw new Error();  // 或者抛出一个错误
     },
     exit: function(err) {
         if (err) {
@@ -59,6 +67,15 @@ mod.start();
 
 
 ## API
+
+
+## 版本（Versioning）
+
+版本迭代遵循 SemVer 2.0.0 的规则。
+
+*但是*，当主版本号是零（0.y.z），一切*随时*都可能有*不兼容的修改*。这处于开发初始阶段，其公共 API 是不稳定的。
+
+关于 SemVer 的更多信息，请访问 http://semver.org/。
 
 ## Copyright and License
 
