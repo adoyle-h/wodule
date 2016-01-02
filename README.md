@@ -71,6 +71,7 @@ mod.start();
 
 ## API
 
+see http://adoyle.me/wodule/
 
 ## Versioning
 
