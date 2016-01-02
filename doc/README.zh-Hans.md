@@ -77,9 +77,9 @@ mod.start();
 
 关于 SemVer 的更多信息，请访问 http://semver.org/。
 
-## Copyright and License
+## 版权声明（Copyright and License）
 
-Copyright 2015 ADoyle
+Copyright 2015-2016 ADoyle
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
