@@ -4,14 +4,12 @@ var util = require('./util');
 var Promise = require('./promise');
 
 /**
- * @private
  * @method idle
  * @return {undefined}
  */
 var idle = util.emtpyCallback;
 
 /**
- * @private
  * @method promiseTrue
  * @return {Promise.<true>}
  */
