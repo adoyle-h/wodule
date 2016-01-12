@@ -1,4 +1,11 @@
 # Wodule
+![Node Version][Node Version Image]
+[![Npm Package Version][Npm Package Version Image]][Npm Package Version LINK]
+[![License][License Image]][License LINK]
+![NodeJS Package Dependencies][NodeJS Package Dependencies Link]
+[![Build Status][Build Status Image]][Build Status Link]
+[![Code Climate][Code Climate Image]][Code Climate Link]
+[![Test Coverage][Test Coverage Image]][Test Coverage Link]
 
 一个用于统一操作的模块类。
 
@@ -91,3 +98,19 @@ Unless required by applicable law or agreed to in writing, software distributed 
 See the License for the specific language governing permissions and limitations under the License.
 
 See the NOTICE file distributed with this work for additional information regarding copyright ownership.
+
+
+<!-- links -->
+
+[Node Version Image]: https://img.shields.io/node/v/wodule.svg
+[Npm Package Version Image]: https://img.shields.io/npm/v/wodule.svg
+[Npm Package Version LINK]: https://www.npmjs.com/package/wodule
+[License Image]: https://img.shields.io/npm/l/wodule.svg
+[License LINK]: https://github.com/adoyle-h/wodule/blob/master/LICENSE
+[NodeJS Package Dependencies Link]: https://david-dm.org/adoyle-h/wodule.svg
+[Build Status Image]: https://travis-ci.org/adoyle-h/wodule.svg?branch=master
+[Build Status Link]: https://travis-ci.org/adoyle-h/wodule
+[Code Climate Image]: https://codeclimate.com/github/adoyle-h/wodule/badges/gpa.svg
+[Code Climate Link]: https://codeclimate.com/github/adoyle-h/wodule
+[Test Coverage Image]: https://codeclimate.com/github/adoyle-h/wodule/badges/coverage.svg
+[Test Coverage Link]: https://codeclimate.com/github/adoyle-h/wodule/coverage
