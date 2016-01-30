@@ -13,10 +13,25 @@ A Module class for unified usage of modules.
 
 [简体中文](./doc/README.zh-Hans.md)
 
+## TOC
+
+<!-- MarkdownTOC -->
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [API](#api)
+- [Versioning](#versioning)
+- [Copyright and License](#copyright-and-license)
+
+<!-- /MarkdownTOC -->
+
+
+<a name="installation"></a>
 ## Installation
 
 `npm install --save wodule`
 
+<a name="quick-start"></a>
 ## Quick Start
 
 ```js
@@ -76,10 +91,12 @@ mod.start();
 // });
 ```
 
+<a name="api"></a>
 ## API
 
 see http://adoyle.me/wodule/
 
+<a name="versioning"></a>
 ## Versioning
 
 The versioning follows the rules of SemVer 2.0.0.
@@ -88,6 +105,7 @@ The versioning follows the rules of SemVer 2.0.0.
 
 For more information on SemVer, please visit http://semver.org/.
 
+<a name="copyright-and-license"></a>
 ## Copyright and License
 
 Copyright (c) 2015-2016 ADoyle. The project is licensed under the **Apache License Version 2.0**.

@@ -9,10 +9,25 @@
 
 一个用于统一操作的模块类。
 
+## TOC
+
+<!-- MarkdownTOC -->
+
+- [安装（Installation）](#安装（installation）)
+- [快速上手（Quick Start）](#快速上手（quick-start）)
+- [API](#api)
+- [版本（Versioning）](#版本（versioning）)
+- [版权声明（Copyright and License）](#版权声明（copyright-and-license）)
+
+<!-- /MarkdownTOC -->
+
+
+<a name="安装（installation）"></a>
 ## 安装（Installation）
 
 `npm install --save wodule`
 
+<a name="快速上手（quick-start）"></a>
 ## 快速上手（Quick Start）
 
 ```js
@@ -73,10 +88,12 @@ mod.start();
 ```
 
 
+<a name="api"></a>
 ## API
 
 请看 http://adoyle.me/wodule/
 
+<a name="版本（versioning）"></a>
 ## 版本（Versioning）
 
 版本迭代遵循 SemVer 2.0.0 的规则。
@@ -85,6 +102,7 @@ mod.start();
 
 关于 SemVer 的更多信息，请访问 http://semver.org/。
 
+<a name="版权声明（copyright-and-license）"></a>
 ## 版权声明（Copyright and License）
 
 Copyright (c) 2015-2016 ADoyle. The project is licensed under the **Apache License Version 2.0**.
