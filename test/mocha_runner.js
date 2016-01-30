@@ -7,8 +7,6 @@ var config = require('./config');
 var globals = require('./globals');
 var loadCases = require('./load_cases');
 
-var mocha;
-
 function configMocha(mocha) {
     mocha.globals(util.keys(globals));
     mocha.reporter(config.get('reporter'));
@@ -26,7 +24,7 @@ function configMocha(mocha) {
 }
 
 function init() {
-    mocha = new Mocha();
+    var mocha = new Mocha();
     configMocha(mocha);
 
     // set limit of stack trace

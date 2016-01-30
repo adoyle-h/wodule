@@ -116,7 +116,7 @@ describe('#wodule', function() {
                     throw new Error(message);
                 };
 
-                should.throws(function(err) {
+                should.throws(function() {
                     wodule.init();
                 }, function(err) {
                     return err.message === message;
@@ -129,7 +129,7 @@ describe('#wodule', function() {
                     return false;
                 };
 
-                should.throws(function(err) {
+                should.throws(function() {
                     wodule.init();
                 }, function(err) {
                     return err.message === 'module._init failed';

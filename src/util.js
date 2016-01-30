@@ -27,7 +27,7 @@ exports.isPromise = function(value) {
 };
 
 exports.returnOrCallback = function(func) {
-    var returnedPromise;
+    var returnedPromise, promise;
     var callbackPromise = new Promise(function(resolve, reject) {
         returnedPromise = func(function(err) {
             if (err) return reject(err);
@@ -35,7 +35,6 @@ exports.returnOrCallback = function(func) {
         });
     });
 
-    var promise;
     if (util.isPromise(returnedPromise)) {
         promise = returnedPromise;
         callbackPromise.cancel();

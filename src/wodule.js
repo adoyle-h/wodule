@@ -28,25 +28,26 @@ function promiseTrue() {
  * @param {Function} [options.exit=idle]
  */
 function Module(options) {
-    var module = this;
+    var mod = this;
     options = options || {};
 
     /**
      * Whether the module is initialized.
      * @property {Boolean} [initialized=false]
      */
-    module.initialized = false;
+    mod.initialized = false;
     /**
      * Whether the module is running.
      * @property {Boolean} [running=false]
      */
-    module.running = false;
+    mod.running = false;
 
     ['init', 'start', 'stop', 'exit'].forEach(function(name) {
         var method = options[name];
+        var setMethod;
         if (method) {
-            var setMethod = 'set' + name[0].toUpperCase() + name.slice(1) + 'Method';
-            module[setMethod](method);
+            setMethod = 'set' + name[0].toUpperCase() + name.slice(1) + 'Method';
+            mod[setMethod](method);
         }
     });
 }
@@ -94,18 +95,18 @@ Module.prototype._init = idle;
  * @return {true}  The module has been initialized successfully.
  */
 Module.prototype.init = function init() {
-    var module = this;
-    if (module.initialized === true) return true;
+    var mod = this;
+    if (mod.initialized === true) return true;
 
-    var initialized = module._init();
+    var initialized = mod._init();
 
     if (initialized === false) {
         throw new Error('module._init failed');
     } else {
-        module.initialized = true;
+        mod.initialized = true;
     }
 
-    return module.initialized;
+    return mod.initialized;
 };
 
 /**
@@ -138,17 +139,17 @@ Module.prototype._start = promiseTrue;
  * @return {Promise.<true|Error>}
  */
 Module.prototype.start = function start(callback) {
-    var module = this;
+    var mod = this;
 
     var promise = Promise.resolve()
         .then(function() {
-            module.init();
+            mod.init();
             return util.returnOrCallback(function(callback) {
-                return module._start(callback);
+                return mod._start(callback);
             });
         })
         .then(function() {
-            module.running = true;
+            mod.running = true;
         })
         .asCallback(callback)
         .return(true);
@@ -186,19 +187,23 @@ Module.prototype._stop = promiseTrue;
  * @return {Promise.<true|Error>}
  */
 Module.prototype.stop = function stop(callback) {
-    var module = this;
+    var mod = this;
 
     var promise = Promise.resolve()
         .then(function() {
-            if (module.initialized === false) return Promise.reject(new Error('module has not been initialized!'));
-            if (module.running === false) return Promise.reject(new Error('module is not running!'));
+            if (mod.initialized === false) {
+                return Promise.reject(new Error('module has not been initialized!'));
+            }
+            if (mod.running === false) {
+                return Promise.reject(new Error('module is not running!'));
+            }
 
             return util.returnOrCallback(function(callback) {
-                return module._stop(callback);
+                return mod._stop(callback);
             });
         })
         .then(function() {
-            module.running = false;
+            mod.running = false;
         })
         .asCallback(callback)
         .return(true);
@@ -229,16 +234,19 @@ Module.prototype._exit = idle;
  * @return {undefined}
  */
 Module.prototype.exit = util.once(function exit(exitCode) {
-    var module = this;
-    return module.stop()
+    var mod = this;
+    return mod.stop()
         .then(function() {
-            return module._exit();
+            return mod._exit();
         }, function(err) {
-            return module._exit(err);
+            return mod._exit(err);
         })
         .catch(function(err) {
             /* eslint-disable no-console */
-            console.error('You should catch any exception thrown from module._exit by yourself.', err.stack || err);
+            console.error(
+                'You should catch any exception thrown from module._exit by yourself.',
+                err.stack || err
+            );
         })
         .finally(function() {
             process.exit(exitCode || 0);

@@ -4,8 +4,6 @@ describe('#util', function() {
     var util = require('../../src/util');
 
     describe('returnOrCallback()', function() {
-        var err = new Error('this is an error');
-
         it('function invokes callback(null, true)', function() {
             return util.returnOrCallback(function func(callback) {
                 setImmediate(callback, null, true);
@@ -26,7 +24,7 @@ describe('#util', function() {
 
         it('function invokes callback(err)', function() {
             return util.returnOrCallback(function func4(callback) {
-                setImmediate(callback, err);
+                setImmediate(callback, new Error('this is an error'));
             })
                 .then(function() {
                     throw new Error('this should not be resolved');
@@ -38,7 +36,7 @@ describe('#util', function() {
 
         it('function returns a Promise.<|Error>', function() {
             return util.returnOrCallback(function func6() {
-                return Promise.reject(err);
+                return Promise.reject(new Error('this is an error'));
             })
                 .then(function() {
                     throw new Error('this should not be resolved');
